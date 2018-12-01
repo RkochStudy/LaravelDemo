@@ -4,14 +4,67 @@ namespace App;
 
 class Post
 {
+    /**
+     * This method initialize the post to the session
+     * @param $session
+     * @return mixed
+     */
     public function getPosts($session)
     {
-        if(!$session->has('posts')){
+        if (!$session->has('posts')) {
             $this->createDummyData($session);
         }
         return $session->get('posts');
     }
 
+    /**
+     * This method get a post for the id
+     * @param $session
+     * @param $id
+     * @return mixed
+     */
+    public function getPost($session, $id)
+    {
+        if (!$session->has('posts')) {
+            $this->createDummyData($session);
+        }
+        return $session->get('posts')[$id];
+    }
+
+    /**
+     * This method add a new post to the session
+     * @param $session
+     * @param $title
+     * @param $content
+     */
+    public function addPost($session, $title, $content)
+    {
+        if (!$session->has('posts')) {
+            $this->createDummyData($session);
+        }
+        $posts = $session->get('posts');
+        array_push($posts, ['title' => $title, 'content' => $content]);
+        $session->put('posts', $posts);
+    }
+
+    /**
+     * This method edit the posts on the current session
+     * @param $session
+     * @param $id
+     * @param $title
+     * @param $content
+     */
+    public function editPost($session, $id, $title, $content)
+    {
+        $posts = $session->get('posts');
+        $posts[$id] = ['title' => $title, 'content' => $content];
+        $session->put('posts', $posts);
+    }
+
+    /**
+     * This method create a post seed in the session
+     * @param $session It's the current session
+     */
     private function createDummyData($session)
     {
         $posts = [
@@ -24,6 +77,6 @@ class Post
                 'content' => 'Some other content'
             ]
         ];
-        $session->put('posts',$posts);
+        $session->put('posts', $posts);
     }
 }
