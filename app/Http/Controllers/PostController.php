@@ -22,10 +22,8 @@ class PostController extends Controller
         return view('admin.index', ['posts' => $posts]);
     }
 
-    public function getPost( $id)
+    public function getPost($id)
     {
-        $post = new Post();
-        $post = $post->getPost($session, $id);
         $post = Post::find($id);
         return view('blog.post', ['post' => $post]);
     }
@@ -53,7 +51,8 @@ class PostController extends Controller
         ]);
         $post->save();
         
-        return redirect()->route('admin.index')->with('info','Post created, Title is:'
+        return redirect()->route('admin.index')
+        ->with('info','Post created, Title is:'
         .$request->input('title'));
     }
 
@@ -63,10 +62,12 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
-        $post = new Post();
-        $post->editPost($session, $request->input('id'), $request->input('title'),
-            $request->input('content'));
-        return redirect()->route('admin.index')->with('info','Post edited, new Title is:'
-            .$request->input('title'));
+        $post = Post::find($request->input('id'));
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->save();
+        return redirect()->route('admin.index')
+        ->with('info','Post edited, new Title is:'.$request
+        ->input('title'));
     }
 }
