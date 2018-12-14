@@ -1,9 +1,12 @@
 <?php
 
 namespace App;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
+class Post extends Model
 {
+    protected $fillable = ['title','content'];
+    
     /**
      * This method initialize the post to the session
      * @param $session
@@ -17,8 +20,8 @@ class Post
         return $session->get('posts');
     }
 
-    /**
-     * This method get a post for the id
+    
+     /** This method get a post for the id
      * @param $session
      * @param $id
      * @return mixed
@@ -61,10 +64,6 @@ class Post
         $session->put('posts', $posts);
     }
 
-    /**
-     * This method create a post seed in the session
-     * @param $session It's the current session
-     */
     private function createDummyData($session)
     {
         $posts = [
