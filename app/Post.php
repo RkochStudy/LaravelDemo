@@ -18,6 +18,12 @@ class Post extends Model
         ->withTimestamps();
     }
 
+
+    public function User ()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     public function SetTitleAttribute($value)
     {
         $this->attributes['title'] = strtolower($value);
@@ -27,6 +33,5 @@ class Post extends Model
     {
         return strtoupper($value);
     }
-
 
 }

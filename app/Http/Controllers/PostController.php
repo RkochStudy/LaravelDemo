@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use Auth;
 use App\Like;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class PostController extends Controller
 
     public function getPost($id)
     {
-        $post = Post::where('id','=',$id)->with->first();
+        $post = Post::where('id','=',$id)->with('likes')->first();
         return view('blog.post', ['post' => $post]);
     }
 
@@ -56,11 +57,15 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
+        $user = Auth::user();
+        if(!$user){
+            return redirect()->back();
+        }
         $post = new Post([
             'title' =>  $request->input('title'), 
             'content' => $request->input('content')
         ]);
-        $post->save();
+        $user->posts()->save($post);
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
         
         return redirect()->route('admin.index')
