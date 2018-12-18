@@ -1,82 +1,32 @@
 <?php
 
 namespace App;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
+class Post extends Model
 {
-    /**
-     * This method initialize the post to the session
-     * @param $session
-     * @return mixed
-     */
-    public function getPosts($session)
+    protected $fillable = ['title','content'];
+
+    public function likes ()
     {
-        if (!$session->has('posts')) {
-            $this->createDummyData($session);
-        }
-        return $session->get('posts');
+        return $this->hasMany('App\like');
     }
 
-    /**
-     * This method get a post for the id
-     * @param $session
-     * @param $id
-     * @return mixed
-     */
-    public function getPost($session, $id)
+    public function tags()
     {
-        if (!$session->has('posts')) {
-            $this->createDummyData($session);
-        }
-        return $session->get('posts')[$id];
+        return $this->BelongsToMany('App\Tag', 'post_tag', 'post_id', 'tag_id')
+        ->withTimestamps();
     }
 
-    /**
-     * This method add a new post to the session
-     * @param $session
-     * @param $title
-     * @param $content
-     */
-    public function addPost($session, $title, $content)
+    public function SetTitleAttribute($value)
     {
-        if (!$session->has('posts')) {
-            $this->createDummyData($session);
-        }
-        $posts = $session->get('posts');
-        array_push($posts, ['title' => $title, 'content' => $content]);
-        $session->put('posts', $posts);
+        $this->attributes['title'] = strtolower($value);
     }
 
-    /**
-     * This method edit the posts on the current session
-     * @param $session
-     * @param $id
-     * @param $title
-     * @param $content
-     */
-    public function editPost($session, $id, $title, $content)
+    public function getTitleAttribute($value)
     {
-        $posts = $session->get('posts');
-        $posts[$id] = ['title' => $title, 'content' => $content];
-        $session->put('posts', $posts);
+        return strtoupper($value);
     }
 
-    /**
-     * This method create a post seed in the session
-     * @param $session It's the current session
-     */
-    private function createDummyData($session)
-    {
-        $posts = [
-            [
-                'title' => 'Learning Laravel',
-                'content' => 'This blog post will get you right on track with Laravel'
-            ],
-            [
-                'title' => 'Something else',
-                'content' => 'Some other content'
-            ]
-        ];
-        $session->put('posts', $posts);
-    }
+
 }
