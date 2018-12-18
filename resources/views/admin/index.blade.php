@@ -1,7 +1,7 @@
 @extends('shared.admin')
 
 @section('content')
-    @if(Session::has('info')))
+    @if(Session::has('info'))
     <div class="row">
         <div class="col-md-12">
             <p class="alert alert-info">{{Session::get('info')}}</p>

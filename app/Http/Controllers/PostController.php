@@ -13,7 +13,7 @@ class PostController extends Controller
 {
     public function getIndex()
     {
-        $posts = Post::orderBy('title', 'desc')->get();
+        $posts = Post::orderBy('title', 'desc')->paginate(2);
         return view('blog.index', ['posts' => $posts]);
     }
 
@@ -88,7 +88,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $post->likes()->delete();
-        $post->tags()->dettach();
+        $post->tags()->detach();
         $post->delete();
         return redirect()->route('admin.index')
         ->with('info','Post deleted');

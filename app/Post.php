@@ -18,4 +18,15 @@ class Post extends Model
         ->withTimestamps();
     }
 
+    public function SetTitleAttribute($value)
+    {
+        $this->attributes['title'] = strtolower($value);
+    }
+
+    public function getTitleAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+
 }
