@@ -20,6 +20,10 @@ class PostController extends Controller
 
     public function getAdminIndex()
     {
+        if (!Auth::check())
+        {
+            return redirect()->back();
+        }
         $posts = Post::orderBy('title', 'asc')->get();
         return view('admin.index', ['posts' => $posts]);
     }
@@ -40,12 +44,20 @@ class PostController extends Controller
 
     public function getAdminCreate()
     {
+        if (!Auth::check())
+        {
+            return redirect()->back();
+        }
         $tags = Tag::all();
         return view('admin.create',['tags' => $tags]);
     }
 
     public function getAdminEdit( $id)
     {
+        if (!Auth::check())
+        {
+            return redirect()->back();
+        }
         $post = Post::find($id);
         $tags = Tag::all();
         return view('admin.edit', ['post' => $post, 'postId' => $id, 'tags' => $tags]);
@@ -57,24 +69,28 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
-        $user = Auth::user();
+        $user = !Auth::user();
         if(!$user){
             return redirect()->back();
         }
         $post = new Post([
-            'title' =>  $request->input('title'), 
+            'title' =>  $request->input('title'),
             'content' => $request->input('content')
         ]);
         $user->posts()->save($post);
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
-        
+
         return redirect()->route('admin.index')
-        ->with('info','Post created, Title is:'
-        .$request->input('title'));
+            ->with('info','Post created, Title is:'
+                .$request->input('title'));
     }
 
     public function postAdminUpdate( Request $request)
     {
+        if (!Auth::check())
+        {
+            return redirect()->back();
+        }
         $this->validate($request, [
             'title' => 'required|min:5',
             'content' => 'required|min:10'
@@ -85,17 +101,21 @@ class PostController extends Controller
         $post->save();
         $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));
         return redirect()->route('admin.index')
-        ->with('info','Post edited, new Title is:'.$request
-        ->input('title'));
+            ->with('info','Post edited, new Title is:'.$request
+                    ->input('title'));
     }
 
     public function getAdminDelete ($id)
     {
+        if (!Auth::check())
+        {
+            return redirect()->back();
+        }
         $post = Post::find($id);
         $post->likes()->delete();
         $post->tags()->detach();
         $post->delete();
         return redirect()->route('admin.index')
-        ->with('info','Post deleted');
+            ->with('info','Post deleted');
     }
 }
