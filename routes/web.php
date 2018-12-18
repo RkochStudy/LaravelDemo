@@ -61,3 +61,6 @@ Route::group(['prefix' => 'admin'], function () {
         'as' => 'admin.delete'
     ]);
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
