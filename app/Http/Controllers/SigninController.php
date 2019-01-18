@@ -9,7 +9,6 @@ class SigninController extends Controller
 {
     public function signin(Request $request)
     {
-//        dd('Our own auth!');
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',

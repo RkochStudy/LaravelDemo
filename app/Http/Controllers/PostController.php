@@ -7,7 +7,6 @@ use Auth;
 use App\Like;
 use App\Tag;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 class PostController extends Controller
@@ -20,8 +19,7 @@ class PostController extends Controller
 
     public function getAdminIndex()
     {
-        if (!Auth::check())
-        {
+        if (!Auth::check()) {
             return redirect()->back();
         }
         $posts = Post::orderBy('title', 'asc')->get();
@@ -30,13 +28,13 @@ class PostController extends Controller
 
     public function getPost($id)
     {
-        $post = Post::where('id','=',$id)->with('likes')->first();
+        $post = Post::where('id', '=', $id)->with('likes')->first();
         return view('blog.post', ['post' => $post]);
     }
 
     public function getLikePost($id)
     {
-        $post = Post::where('id',$id)->first();
+        $post = Post::where('id', $id)->first();
         $like = new Like();
         $post->likes()->save($like);
         return redirect()->back();
@@ -44,18 +42,16 @@ class PostController extends Controller
 
     public function getAdminCreate()
     {
-        if (!Auth::check())
-        {
+        if (!Auth::check()) {
             return redirect()->back();
         }
         $tags = Tag::all();
-        return view('admin.create',['tags' => $tags]);
+        return view('admin.create', ['tags' => $tags]);
     }
 
-    public function getAdminEdit( $id)
+    public function getAdminEdit($id)
     {
-        if (!Auth::check())
-        {
+        if (!Auth::check()) {
             return redirect()->back();
         }
         $post = Post::find($id);
@@ -63,32 +59,31 @@ class PostController extends Controller
         return view('admin.edit', ['post' => $post, 'postId' => $id, 'tags' => $tags]);
     }
 
-    public function postAdminCreate( Request $request)
+    public function postAdminCreate(Request $request)
     {
         $this->validate($request, [
             'title' => 'required|min:5',
             'content' => 'required|min:10'
         ]);
-        $user = !Auth::user();
-        if(!$user){
+        $user = Auth::user();
+        if (!$user) {
             return redirect()->back();
         }
         $post = new Post([
-            'title' =>  $request->input('title'),
+            'title' => $request->input('title'),
             'content' => $request->input('content')
         ]);
         $user->posts()->save($post);
         $post->tags()->attach($request->input('tags') === null ? [] : $request->input('tags'));
 
         return redirect()->route('admin.index')
-            ->with('info','Post created, Title is:'
-                .$request->input('title'));
+            ->with('info', 'Post created, Title is:'
+                . $request->input('title'));
     }
 
-    public function postAdminUpdate( Request $request)
+    public function postAdminUpdate(Request $request)
     {
-        if (!Auth::check())
-        {
+        if (!Auth::check()) {
             return redirect()->back();
         }
         $this->validate($request, [
@@ -101,14 +96,13 @@ class PostController extends Controller
         $post->save();
         $post->tags()->sync($request->input('tags') === null ? [] : $request->input('tags'));
         return redirect()->route('admin.index')
-            ->with('info','Post edited, new Title is:'.$request
-                    ->input('title'));
+            ->with('info', 'Post edited, new Title is:' . $request
+                ->input('title'));
     }
 
-    public function getAdminDelete ($id)
+    public function getAdminDelete($id)
     {
-        if (!Auth::check())
-        {
+        if (!Auth::check()) {
             return redirect()->back();
         }
         $post = Post::find($id);
@@ -116,6 +110,6 @@ class PostController extends Controller
         $post->tags()->detach();
         $post->delete();
         return redirect()->route('admin.index')
-            ->with('info','Post deleted');
+            ->with('info', 'Post deleted');
     }
 }
