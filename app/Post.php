@@ -1,14 +1,13 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title','content'];
 
-    public function likes()
+    public function likes ()
     {
         return $this->hasMany('App\like');
     }
@@ -16,18 +15,9 @@ class Post extends Model
     public function tags()
     {
         return $this->BelongsToMany('App\Tag', 'post_tag', 'post_id', 'tag_id')
-            ->withTimestamps();
+        ->withTimestamps();
     }
 
-
-    public function User()
-    {
-        return $this->belongsTo('App\User');
-    }
-
-    /**
-     * This is a mutator
-     */
     public function SetTitleAttribute($value)
     {
         $this->attributes['title'] = strtolower($value);
@@ -37,5 +27,6 @@ class Post extends Model
     {
         return strtoupper($value);
     }
+
 
 }

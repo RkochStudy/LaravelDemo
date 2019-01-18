@@ -1,9 +1,8 @@
-@extends('shared.master')
+@extends('shared.admin')
 
 @section('content')
     @include('partials.errors')
-    <div class="container">
-        <div class="row">
+    <div class="row">
         <div class="col-md-12">
             <form action="{{route('admin.create')}}" method="post">
                 <div class="form-group">
@@ -26,6 +25,5 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
-    </div>
     </div>
 @endSection
