@@ -13,15 +13,21 @@
 
     <link rel="stylesheet" href="{{URL::to('css/MyStyleSheet.css')}}">
 
-    <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
 </head>
 <body>
 @include('partials.header')
-<div class="wrapper">
-    <div class="container">
-        @yield('content')
-    </div>
-</div>
+
+   <main class="py-4">
+       @yield('content')
+   </main>
+
+
 </body>
 </html>
