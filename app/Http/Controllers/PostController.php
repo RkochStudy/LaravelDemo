@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Auth;
+use Gate;
 use App\Like;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -91,6 +92,10 @@ class PostController extends Controller
             'content' => 'required|min:10'
         ]);
         $post = Post::find($request->input('id'));
+        if (Gate::denies('manipulate-post', $post)){
+            return redirect()->back()
+            -> with('error', 'You don\'t have the permission to do this action');
+        }
         $post->title = $request->input('title');
         $post->content = $request->input('content');
         $post->save();
@@ -106,6 +111,10 @@ class PostController extends Controller
             return redirect()->back();
         }
         $post = Post::find($id);
+        if (Gate::denies('manipulate-post', $post)){
+            return redirect()->back()
+            -> with('error', 'You don\'t have the permission to do this action');
+        }
         $post->likes()->delete();
         $post->tags()->detach();
         $post->delete();
