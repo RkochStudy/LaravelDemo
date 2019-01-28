@@ -1,8 +1,10 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{{route('blog.index')}}">Laravel Guilde</a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{route('blog.index')}}">Laravel Guilde</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="nav navbar-nav">
             <li><a class="nav-link" href="{{route('blog.index')}}">Blog</a></li>
             <li><a class="nav-link" href="{{route('other.about')}}">About</a></li>
@@ -28,7 +30,5 @@
                 </li>
             @endif
         </ul>
-
-
     </div>
 </nav>
