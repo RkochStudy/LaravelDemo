@@ -30,10 +30,11 @@ Route::get('about', function () {
     return view('other.about');
 })->name('other.about');
 
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('',[
         'uses' => 'PostController@getAdminIndex',
-        'as' => 'admin.index'
+        'as' => 'admin.index',
+        'middleware' => 'auth'
     ]);
 
     Route::get('create', [
@@ -61,3 +62,9 @@ Route::group(['prefix' => 'admin'], function () {
         'as' => 'admin.delete'
     ]);
 });
+Auth::routes();
+
+Route::post('login', [
+   'uses' => 'SigninController@signin',
+    'as'=> 'auth.sing'
+]);
